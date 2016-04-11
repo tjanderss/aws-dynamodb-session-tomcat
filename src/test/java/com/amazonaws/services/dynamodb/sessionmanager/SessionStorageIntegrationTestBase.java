@@ -48,7 +48,7 @@ public class SessionStorageIntegrationTestBase extends AWSTestBase {
         tableName = getUniqueTableName();
         DynamoUtils.createSessionTable(dynamoClient, tableName, 10L, 10L);
         Tables.waitForTableToBecomeActive(dynamoClient, tableName);
-        dynamoMapper = DynamoUtils.createDynamoMapper(dynamoClient, tableName);
+        dynamoMapper = DynamoUtils.createDynamoMapper(dynamoClient, tableName, false);
     }
 
     /**

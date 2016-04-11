@@ -61,6 +61,7 @@ public class DynamoDBSessionManager extends PersistentManagerBase {
     private String proxyHost;
     private Integer proxyPort;
     private boolean deleteCorruptSessions = false;
+    private boolean useStrongConsistency = false;
 
     private static final Log logger = LogFactory.getLog(DynamoDBSessionManager.class);
 
@@ -127,6 +128,8 @@ public class DynamoDBSessionManager extends PersistentManagerBase {
     public void setProxyPort(Integer proxyPort) {
         this.proxyPort = proxyPort;
     }
+
+    public void setUseStrongConsistency(boolean useStrongConsistency) { this.useStrongConsistency = useStrongConsistency; }
 
     public void setDeleteCorruptSessions(boolean deleteCorruptSessions) {
         this.deleteCorruptSessions = deleteCorruptSessions;
@@ -244,7 +247,8 @@ public class DynamoDBSessionManager extends PersistentManagerBase {
     }
 
     private DynamoSessionStorage createSessionStorage(AmazonDynamoDBClient dynamoClient) {
-        DynamoDBMapper dynamoMapper = DynamoUtils.createDynamoMapper(dynamoClient, tableName);
+        logger.info("Using strong consistency for session reads: " +useStrongConsistency);
+        DynamoDBMapper dynamoMapper = DynamoUtils.createDynamoMapper(dynamoClient, tableName, useStrongConsistency);
         return new DynamoSessionStorage(dynamoMapper, getSessionConverter());
     }
 
